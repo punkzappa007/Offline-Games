@@ -1,9 +1,13 @@
 // Ilagay dito ang CSV link mula sa "Publish to web" ng Google Sheets mo
 const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSJ_lcgCnFcVd8hiNtxdRBkAkT501hb59-tPFkYMEvJkCb6yMZp2Fc8noZYxMEZVGZwY0OWtItWJuZc/pub?output=csv';
+// Ilagay dito yung dalawang magkaibang link
+const OFFLINE_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSJ_lcgCnFcVd8hiNtxdRBkAkT501hb59-tPFkYMEvJkCb6yMZp2Fc8noZYxMEZVGZwY0OWtItWJuZc/pub?gid=0&single=true&output=csv';
+const ONLINE_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSJ_lcgCnFcVd8hiNtxdRBkAkT501hb59-tPFkYMEvJkCb6yMZp2Fc8noZYxMEZVGZwY0OWtItWJuZc/pub?gid=1711893319&single=true&output=csv';
 
-async function fetchGameData() {
+// Baguhin ang fetchGameData para tumanggap ng URL parameter
+async function fetchGameData(sheetUrl) {
     try {
-        const response = await fetch(SHEET_CSV_URL);
+        const response = await fetch(sheetUrl);
         const data = await response.text();
         return parseCSV(data);
     } catch (error) {
@@ -12,9 +16,7 @@ async function fetchGameData() {
     }
 }
 
-// Simple CSV parser (Pinalitan para isama ang 'setup')
-// Simple CSV parser (Pinalitan para isama ang 'size')
-// Simple CSV parser
+
 function parseCSV(csvText) {
     const lines = csvText.split('\n');
     const result = [];
@@ -82,11 +84,13 @@ function createGameCard(game) {
         </div>
     `;
 }
-async function populateGames() {
+
+// Dagdagan ng sheetUrl parameter
+async function populateGames(sheetUrl) {
     const allGamesGrid = document.getElementById('allGamesGrid');
     allGamesGrid.innerHTML = '<p style="color: var(--accent);">Loading games database...</p>';
     
-    const games = await fetchGameData();
+    const games = await fetchGameData(sheetUrl); // Ipasa yung URL
     
     if (games.length === 0) {
         allGamesGrid.innerHTML = '<p style="color: red;">Error loading games. Check your Google Sheet link.</p>';
@@ -114,6 +118,50 @@ document.addEventListener('DOMContentLoaded', () => {
             cards.forEach(card => {
                 const title = card.querySelector('h3').textContent.toLowerCase();
                 // Itatago ang card kapag hindi match sa tinype
+                if (title.includes(term)) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+    }
+});
+
+// Initialize when DOM is loaded
+document.addEventListener('DOMContentLoaded', () => {
+    // Unang load, Offline agad ang ipapakita
+    populateGames(OFFLINE_CSV_URL);
+
+    // Setup Tab Switching Logic
+    const tabOffline = document.getElementById('tabOffline');
+    const tabOnline = document.getElementById('tabOnline');
+
+    if (tabOffline && tabOnline) {
+        tabOffline.addEventListener('click', (e) => {
+            e.preventDefault(); // Para hindi mag-jump ang page sa taas
+            tabOffline.classList.add('active');
+            tabOnline.classList.remove('active');
+            populateGames(OFFLINE_CSV_URL); // Load Offline Data
+        });
+
+        tabOnline.addEventListener('click', (e) => {
+            e.preventDefault();
+            tabOnline.classList.add('active');
+            tabOffline.classList.remove('active');
+            populateGames(ONLINE_CSV_URL); // Load Online Data
+        });
+    }
+
+    // Existing Search Bar Logic mo (Panatilihin lang ito kung paano mo nilagay kanina)
+    const searchInput = document.getElementById('searchInput');
+    if (searchInput) {
+        searchInput.addEventListener('keyup', (e) => {
+            const term = e.target.value.toLowerCase();
+            const cards = document.querySelectorAll('.game-card');
+            
+            cards.forEach(card => {
+                const title = card.querySelector('h3').textContent.toLowerCase();
                 if (title.includes(term)) {
                     card.style.display = 'flex';
                 } else {
