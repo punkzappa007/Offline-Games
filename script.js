@@ -100,35 +100,7 @@ async function populateGames(sheetUrl) {
     allGamesGrid.innerHTML = games.map(game => createGameCard(game)).join('');
 }
 
-// Initialize when DOM is loaded
-document.addEventListener('DOMContentLoaded', () => {
-    populateGames();
-});
-
-// Realtime Search Filter
-document.addEventListener('DOMContentLoaded', () => {
-    populateGames();
-
-    const searchInput = document.getElementById('searchInput');
-    if (searchInput) {
-        searchInput.addEventListener('keyup', (e) => {
-            const term = e.target.value.toLowerCase();
-            const cards = document.querySelectorAll('.game-card');
-            
-            cards.forEach(card => {
-                const title = card.querySelector('h3').textContent.toLowerCase();
-                // Itatago ang card kapag hindi match sa tinype
-                if (title.includes(term)) {
-                    card.style.display = 'flex';
-                } else {
-                    card.style.display = 'none';
-                }
-            });
-        });
-    }
-});
-
-// Initialize when DOM is loaded
+// Pinagsamang Initialize kapag nag-load ang DOM
 document.addEventListener('DOMContentLoaded', () => {
     // Unang load, Offline agad ang ipapakita
     populateGames(OFFLINE_CSV_URL);
@@ -153,7 +125,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Existing Search Bar Logic mo (Panatilihin lang ito kung paano mo nilagay kanina)
+    // Search Bar Logic
     const searchInput = document.getElementById('searchInput');
     if (searchInput) {
         searchInput.addEventListener('keyup', (e) => {
@@ -169,5 +141,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
         });
+    }
+});
     }
 });
