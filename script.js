@@ -85,61 +85,129 @@ function createGameCard(game) {
     `;
 }
 
-// Dagdagan ng sheetUrl parameter
+// --- PAGINATION & STATE VARIABLES ---
+let masterGamesList = [];
+let filteredGamesList = [];
+let currentPage = 1;
+const GAMES_PER_PAGE = 24; // Dito mo papalitan kung ilang laro kada page
+
+// --- MAIN FUNCTIONS ---
 async function populateGames(sheetUrl) {
     const allGamesGrid = document.getElementById('allGamesGrid');
     allGamesGrid.innerHTML = '<p style="color: var(--accent);">Loading games database...</p>';
     
-    const games = await fetchGameData(sheetUrl); // Ipasa yung URL
+    // Reset page kapag nag-switch tab (Offline/Online)
+    currentPage = 1; 
+
+    const games = await fetchGameData(sheetUrl);
     
     if (games.length === 0) {
         allGamesGrid.innerHTML = '<p style="color: red;">Error loading games. Check your Google Sheet link.</p>';
+        document.getElementById('paginationControls').innerHTML = ''; 
         return;
     }
     
-    allGamesGrid.innerHTML = games.map(game => createGameCard(game)).join('');
+    // I-save ang data sa global variables para ma-cut by page
+    masterGamesList = games;
+    filteredGamesList = games; 
+    
+    renderPage();
 }
 
-// Pinagsamang Initialize kapag nag-load ang DOM
+function renderPage() {
+    const allGamesGrid = document.getElementById('allGamesGrid');
+    
+    // Logic para makuha lang ang 24 games per page
+    const startIndex = (currentPage - 1) * GAMES_PER_PAGE;
+    const endIndex = startIndex + GAMES_PER_PAGE;
+    const gamesToShow = filteredGamesList.slice(startIndex, endIndex);
+
+    if (gamesToShow.length === 0) {
+        allGamesGrid.innerHTML = '<p style="color: var(--text-secondary);">Walang nahanap na laro.</p>';
+    } else {
+        allGamesGrid.innerHTML = gamesToShow.map(game => createGameCard(game)).join('');
+    }
+
+    renderPaginationControls();
+}
+
+function renderPaginationControls() {
+    const paginationContainer = document.getElementById('paginationControls');
+    const totalPages = Math.ceil(filteredGamesList.length / GAMES_PER_PAGE);
+
+    if (totalPages <= 1) {
+        paginationContainer.innerHTML = ''; // Itago ang buttons kung 1 page lang
+        return;
+    }
+
+    let html = '';
+
+    // Back Button
+    html += `<button class="page-btn ${currentPage === 1 ? 'disabled' : ''}" onclick="changePage(${currentPage - 1})">Back</button>`;
+
+    // Page Numbers (1, 2, 3...)
+    for (let i = 1; i <= totalPages; i++) {
+        html += `<button class="page-btn ${currentPage === i ? 'active' : ''}" onclick="changePage(${i})">${i}</button>`;
+    }
+
+    // Next Button
+    html += `<button class="page-btn ${currentPage === totalPages ? 'disabled' : ''}" onclick="changePage(${currentPage + 1})">Next</button>`;
+
+    paginationContainer.innerHTML = html;
+}
+
+// Global function para matawag kapag pinindot ang page buttons
+window.changePage = function(newPage) {
+    const totalPages = Math.ceil(filteredGamesList.length / GAMES_PER_PAGE);
+    if (newPage >= 1 && newPage <= totalPages) {
+        currentPage = newPage;
+        renderPage();
+        // Automatic scroll pataas kapag lumipat ng page para makita agad yung first game
+        window.scrollTo({ top: 0, behavior: 'smooth' }); 
+    }
+};
+
+// --- INITIALIZATION & EVENT LISTENERS ---
 document.addEventListener('DOMContentLoaded', () => {
     // Unang load, Offline agad ang ipapakita
     populateGames(OFFLINE_CSV_URL);
 
-    // Setup Tab Switching Logic
+    // Setup Tab Switching Logic (Offline/Online)
     const tabOffline = document.getElementById('tabOffline');
     const tabOnline = document.getElementById('tabOnline');
 
     if (tabOffline && tabOnline) {
         tabOffline.addEventListener('click', (e) => {
-            e.preventDefault(); // Para hindi mag-jump ang page sa taas
+            e.preventDefault(); 
             tabOffline.classList.add('active');
             tabOnline.classList.remove('active');
-            populateGames(OFFLINE_CSV_URL); // Load Offline Data
+            document.getElementById('searchInput').value = ''; // I-clear ang search pag switch tab
+            populateGames(OFFLINE_CSV_URL); 
         });
 
         tabOnline.addEventListener('click', (e) => {
             e.preventDefault();
             tabOnline.classList.add('active');
             tabOffline.classList.remove('active');
-            populateGames(ONLINE_CSV_URL); // Load Online Data
+            document.getElementById('searchInput').value = ''; // I-clear ang search pag switch tab
+            populateGames(ONLINE_CSV_URL); 
         });
     }
 
-    // Search Bar Logic
+    // Search Bar Logic (Bagong logic na hindi bumabangga sa pagination)
     const searchInput = document.getElementById('searchInput');
     if (searchInput) {
         searchInput.addEventListener('keyup', (e) => {
             const term = e.target.value.toLowerCase();
-            const cards = document.querySelectorAll('.game-card');
             
-            cards.forEach(card => {
-                const title = card.querySelector('h3').textContent.toLowerCase();
-                if (title.includes(term)) {
-                    card.style.display = 'flex';
-                } else {
-                    card.style.display = 'none';
-                }
-            });
+            // I-filter ang master list
+            filteredGamesList = masterGamesList.filter(game => 
+                game.name.toLowerCase().includes(term)
+            );
+            
+            // I-reset sa Page 1 tuwing may bago nang tina-type
+            currentPage = 1; 
+            renderPage();
         });
     }
 });
