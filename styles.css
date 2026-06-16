@@ -572,7 +572,7 @@ body {
 /* Total Games Counter */
 .total-count {
     font-size: 14px;
-    color: var(--accent); /* Pwede mong gawing var(--text-secondary) kung gusto mo ng gray */
+    color: var(--text-secondary); /* Pwede mong gawing var(--text-secondary) kung gusto mo ng gray */
     font-weight: normal;
     margin-left: 10px;
     letter-spacing: 0;
