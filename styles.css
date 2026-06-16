@@ -525,3 +525,46 @@ body {
 body {
     background-image: radial-gradient(circle at 25% 40%, rgba(95, 158, 240, 0.02) 0%, transparent 50%);
 }
+
+/* Pagination Controls */
+.pagination-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin-top: 40px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.page-btn {
+    background: rgba(26, 26, 26, 0.6);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(74, 158, 255, 0.2);
+    color: var(--text-primary);
+    padding: 8px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.page-btn:hover:not(.disabled) {
+    border-color: var(--accent);
+    box-shadow: 0 0 15px rgba(74, 158, 255, 0.4);
+    background: rgba(74, 158, 255, 0.1);
+}
+
+.page-btn.active {
+    background: var(--accent);
+    color: #0a0a0a;
+    border-color: var(--accent);
+    box-shadow: 0 0 15px rgba(74, 158, 255, 0.6);
+}
+
+.page-btn.disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    border-color: var(--border);
+}
