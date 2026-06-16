@@ -116,11 +116,17 @@ async function populateGames(sheetUrl) {
 
 function renderPage() {
     const allGamesGrid = document.getElementById('allGamesGrid');
+    const totalCountSpan = document.getElementById('totalGamesCount'); // Kukunin natin yung span
     
-    // Logic para makuha lang ang 24 games per page
+    // Logic para makuha lang ang games per page
     const startIndex = (currentPage - 1) * GAMES_PER_PAGE;
     const endIndex = startIndex + GAMES_PER_PAGE;
-    const gamesToShow = filteredGamesList.slice(startIndex, endIndex);
+    const gamesToShow = filteredGamesList.length > 0 ? filteredGamesList.slice(startIndex, endIndex) : [];
+
+    // I-update ang text ng total games (Halimbawa: "(150 games)")
+    if (totalCountSpan) {
+        totalCountSpan.textContent = `(${filteredGamesList.length} games)`;
+    }
 
     if (gamesToShow.length === 0) {
         allGamesGrid.innerHTML = '<p style="color: var(--text-secondary);">Walang nahanap na laro.</p>';
