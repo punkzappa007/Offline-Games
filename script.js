@@ -139,10 +139,12 @@ function renderPage() {
 
 function renderPaginationControls() {
     const paginationContainer = document.getElementById('paginationControls');
+    const paginationContainerTop = document.getElementById('paginationControlsTop'); // Kinuha natin ang top container
     const totalPages = Math.ceil(filteredGamesList.length / GAMES_PER_PAGE);
 
     if (totalPages <= 1) {
-        paginationContainer.innerHTML = ''; // Itago ang buttons kung 1 page lang
+        if (paginationContainer) paginationContainer.innerHTML = ''; 
+        if (paginationContainerTop) paginationContainerTop.innerHTML = '';
         return;
     }
 
@@ -159,7 +161,9 @@ function renderPaginationControls() {
     // Next Button
     html += `<button class="page-btn ${currentPage === totalPages ? 'disabled' : ''}" onclick="changePage(${currentPage + 1})">Next</button>`;
 
-    paginationContainer.innerHTML = html;
+    // I-apply ang nabuong HTML sa parehong lalagyan
+    if (paginationContainer) paginationContainer.innerHTML = html;
+    if (paginationContainerTop) paginationContainerTop.innerHTML = html;
 }
 
 // Global function para matawag kapag pinindot ang page buttons
