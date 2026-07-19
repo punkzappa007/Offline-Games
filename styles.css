@@ -1,6 +1,6 @@
 /* ============================================================
-   DARK MODE - ELEGANT & PROFESSIONAL THEME
-   Deep, sophisticated palette with refined contrasts
+   DARK MODE - GAMING FLAT THEME
+   Deep background (#212121), Elevated Cards (#313131), Candy Red Accent
    ============================================================ */
 
 /* ----- Reset & Base ----- */
@@ -33,6 +33,7 @@
 body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
     background-color: var(--bg-primary);
+    background-image: radial-gradient(circle at 25% 40%, rgba(255, 8, 0, 0.03) 0%, transparent 50%);
     color: var(--text-primary);
     line-height: 1.5;
     min-height: 100vh;
@@ -68,18 +69,23 @@ body {
     gap: 20px;
 }
 
-/* Logo gradients to red */
 .logo {
+    font-size: 1.6rem;
+    font-weight: 620;
+    text-decoration: none;
+    letter-spacing: -0.02em;
     background: linear-gradient(135deg, #ffffff 0%, #ff0800 100%);
     background-clip: text;
     -webkit-background-clip: text;
     color: transparent;
 }
+
 .logo span {
     background: linear-gradient(135deg, #ff0800, #ff4d4d);
     background-clip: text;
     -webkit-background-clip: text;
     color: transparent;
+    font-weight: 700;
 }
 
 .nav-links {
@@ -266,22 +272,7 @@ body {
     font-weight: 450;
 }
 
-/* Price tag refined */
-.price-tag {
-    display: inline-block;
-    background: var(--accent-light);
-    padding: 5px 12px;
-    border-radius: 30px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: var(--accent);
-    margin-top: 10px;
-    border: none;
-    width: fit-content;
-    letter-spacing: -0.2px;
-}
-
-/* Game Tags */
+/* ========== CLEAN & NEUTRAL TAGS (HINDI MASAKIT SA MATA) ========== */
 .game-tags {
     display: flex;
     gap: 8px;
@@ -290,47 +281,59 @@ body {
 }
 
 .tag {
-    background: rgba(255, 255, 255, 0.03);
+    background: rgba(255, 255, 255, 0.04);
     border: 1px solid rgba(255, 255, 255, 0.08);
     padding: 4px 10px;
-    border-radius: 6px; /* Ginawang modern rectangle na may konting kurbada sa gilid */
+    border-radius: 6px;
     font-size: 0.68rem;
     font-weight: 500;
-    color: var(--text-secondary);
+    color: #b3b3b3; /* Neutral Light Gray - hindi red */
     text-transform: uppercase;
     letter-spacing: 0.5px;
     transition: var(--transition-default);
 }
 
-.tag:hover {
-    border-color: var(--accent);
-    color: var(--accent);
+.game-card:hover .tag {
+    border-color: rgba(255, 255, 255, 0.2);
+    color: #ffffff; /* Pumuputi kapag tinapatan ng mouse */
 }
 
-/* Badge variations - elegant dark theme */
-.badge-coop {
-    border-color: #4c9f70;
-    color: #6abf8a;
+/* Lahat ng badges naka-neutralize para malinis tignan */
+.badge-coop, .badge-pvp {
+    border-color: rgba(255, 255, 255, 0.12) !important;
+    color: #cccccc !important;
 }
 
-.badge-pvp {
-    border-color: #c96b5e;
-    color: #e0877a;
-}
-
-.badge-diskless-only {
-    border-color: #e6a342;
-    color: #f0b866;
-}
-
-.badge-diskless-trad {
-    border-color: #9370db;
-    color: #aa88ff;
+.badge-diskless-only, .badge-diskless-trad {
+    border-color: rgba(255, 255, 255, 0.08) !important;
+    color: #999999 !important;
 }
 
 .badge-size {
-    border-color: #4a5b72;
-    color: #8b9bb0;
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.15) !important;
+    color: #e2e8f0 !important; /* Mas maputi para kitang-kita ang size */
+}
+
+/* ========== PRICE TAG (STEALTH MODE) ========== */
+.price-tag {
+    display: inline-block;
+    background: rgba(255, 255, 255, 0.05); /* Dark gray background */
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 5px 12px;
+    border-radius: 30px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #ffffff; /* Puti ang text ng presyo */
+    margin-top: 10px;
+    width: fit-content;
+    letter-spacing: 0.2px;
+    transition: var(--transition-default);
+}
+
+.game-card:hover .price-tag {
+    background: var(--bg-elevated);
+    border-color: #666666;
 }
 
 /* ========== SEARCH BAR - Dark Glassmorphism ========== */
@@ -500,25 +503,12 @@ body {
     border-radius: 8px;
 }
 
-.game-card {
-    cursor: pointer;
-}
-
-.game-card:hover .price-tag {
-    background: var(--accent-light);
-}
-
 .game-card,
 .tag,
 .lang-toggle,
 #searchInput,
 .nav-links a {
     transition: var(--transition-default);
-}
-
-/* Smooth loading / visual comfort */
-body {
-    background-image: radial-gradient(circle at 25% 40%, rgba(255, 8, 0, 0.03) 0%, transparent 50%);
 }
 
 /* Pagination Controls */
@@ -532,11 +522,15 @@ body {
     flex-wrap: wrap;
 }
 
+#paginationControlsTop {
+    margin-top: 10px;
+    margin-bottom: 24px;
+}
+
 .page-btn {
     background: rgba(49, 49, 49, 0.6);
-    border: 1px solid rgba(255, 8, 0, 0.2);
     backdrop-filter: blur(10px);
-    
+    border: 1px solid rgba(255, 8, 0, 0.2);
     color: var(--text-primary);
     padding: 8px 14px;
     border-radius: 6px;
@@ -551,6 +545,7 @@ body {
     box-shadow: 0 0 15px rgba(255, 8, 0, 0.4);
     background: rgba(255, 8, 0, 0.1);
 }
+
 .page-btn.active {
     background: var(--accent);
     color: #ffffff;
@@ -567,65 +562,9 @@ body {
 /* Total Games Counter */
 .total-count {
     font-size: 16px;
-    color: var(--accent); /* Pwede mong gawing var(--text-secondary) kung gusto mo ng gray */
+    color: var(--accent); 
     font-weight: normal;
     margin-left: 10px;
     letter-spacing: 0;
     opacity: 0.8;
-}
-
-/* ========== REFINED TAGS & BADGES (PREMIUM GLASS STYLE) ========== */
-.tag {
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    padding: 4px 10px;
-    border-radius: 6px; /* Ginawang modern rectangle na may konting kurbada sa gilid */
-    font-size: 0.68rem;
-    font-weight: 500;
-    color: var(--text-secondary);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    transition: var(--transition-default);
-}
-
-/* Kapag tinapatan ng mouse yung card, magre-react din nang swabe yung mga tags */
-.game-card:hover .tag {
-    border-color: rgba(255, 255, 255, 0.18);
-    color: var(--text-primary);
-}
-
-/* Swabeng timpla para sa Co-op (Muted Emerald Tint) */
-.badge-coop {
-    background: rgba(76, 159, 112, 0.06);
-    border-color: rgba(76, 159, 112, 0.25) !important;
-    color: #7cd09a !important;
-}
-
-/* Bagay na bagay sa Candy Red para sa PVP (Crimson Tint) */
-.badge-pvp {
-    background: rgba(255, 8, 0, 0.06);
-    border-color: rgba(255, 8, 0, 0.25) !important;
-    color: #ff6666 !important;
-}
-
-/* Para sa Diskless Only (Amber Tint) */
-.badge-diskless-only {
-    background: rgba(230, 163, 66, 0.06);
-    border-color: rgba(230, 163, 66, 0.25) !important;
-    color: #f3c27a !important;
-}
-
-/* Para sa Diskless & Trad (Stealth Sleek Gray) */
-.badge-diskless-trad {
-    background: rgba(255, 255, 255, 0.05);
-    border-color: rgba(255, 255, 255, 0.12) !important;
-    color: #cccccc !important;
-}
-
-/* Para sa Size Tag (Candy Red Highlight para lutang agad) */
-.badge-size {
-    background: rgba(255, 8, 0, 0.12);
-    border-color: rgba(255, 8, 0, 0.35) !important;
-    color: #ff4d4d !important;
-    font-weight: 600;
 }
